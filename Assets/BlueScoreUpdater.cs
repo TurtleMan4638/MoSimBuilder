@@ -129,8 +129,8 @@ public class BlueScoreUpdater : MonoBehaviour
     private Vector3 l1Corner2C = new Vector3(3.681f, 0.6f, 0.589f);
     private Vector3 l1Corner1D = new Vector3(3.322f, 0.3f, 0.451f);
     private Vector3 l1Corner2D = new Vector3(4.639f, 0.6f, 0.666f);
-    private Vector3 l1Corner1E = new Vector3(4.16f, 0.3f, 0.533f);
-    private Vector3 l1Corner2E = new Vector3(5.258f, 0.6f, 0.581f);
+    private Vector3 l1Corner1E = new Vector3(3.956f, 0.3f, 0.372f);
+    private Vector3 l1Corner2E = new Vector3(5.315f, 0.6f, 0.87f);
     private Vector3 l1Corner1F = new Vector3(4.678f, 0.3f, -0.553f);
     private Vector3 l1Corner2F = new Vector3(5.23f, 0.6f, 0.598f);
 
