@@ -35,6 +35,8 @@ TagManager:
   - HighBarRed
   - TraverseBar
   - TraverseBarRed
+  - Algae
+  - Coral
   layers:
   - Default
   - TransparentFX
