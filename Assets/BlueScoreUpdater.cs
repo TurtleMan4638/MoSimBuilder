@@ -25,6 +25,7 @@ public class BlueScoreUpdater : MonoBehaviour
     private bool endgameStarted = false;
     private bool parkScored = false;
     private bool deepClimbScored = false;
+    private bool wasInEndgameZone = false; // Track if robot was previously in endgame zone
     private float parkThresholdY = 0.07603697f;
     private float climbThresholdY = 0.25f; // Updated climb threshold
 
@@ -130,7 +131,7 @@ public class BlueScoreUpdater : MonoBehaviour
     private Vector3 l1Corner1D = new Vector3(3.322f, 0.3f, 0.451f);
     private Vector3 l1Corner2D = new Vector3(4.639f, 0.6f, 0.666f);
     private Vector3 l1Corner1E = new Vector3(3.956f, 0.3f, 0.372f);
-    private Vector3 l1Corner2E = new Vector3(5.315f, 0.6f, 0.87f);
+    private Vector3 l1Corner2E = new Vector3(5.315f, 0.6f, 0.98f);
     private Vector3 l1Corner1F = new Vector3(4.678f, 0.3f, -0.553f);
     private Vector3 l1Corner2F = new Vector3(5.23f, 0.6f, 0.598f);
 
@@ -226,7 +227,8 @@ public class BlueScoreUpdater : MonoBehaviour
         foundRobot = null;
         float elapsedTime = Time.time - startTime;
         timer += Time.deltaTime;
-        if (timer >= interval){
+        if (timer >= interval)
+        {
             timer = 0f; // Reset the timer
 
             // Try to find robot once it's spawned
@@ -291,6 +293,13 @@ public class BlueScoreUpdater : MonoBehaviour
 
                 if (inEndgameZone)
                 {
+                    // Robot entered the endgame zone
+                    if (!wasInEndgameZone)
+                    {
+                        wasInEndgameZone = true;
+                        Debug.Log("Robot entered endgame zone!");
+                    }
+
                     // Check if robot is doing deep climb (Y > climbThresholdY AND in endgame zone)
                     if (robotPos.y > climbThresholdY)
                     {
@@ -311,7 +320,7 @@ public class BlueScoreUpdater : MonoBehaviour
                     }
                     else if (robotPos.y <= parkThresholdY)
                     {
-                        // Robot is parked (below park threshold)
+                        // Robot is parked (below park threshold) AND in endgame zone
                         if (!parkScored && !deepClimbScored)
                         {
                             AddBlueScore(2);
@@ -343,7 +352,13 @@ public class BlueScoreUpdater : MonoBehaviour
                 }
                 else
                 {
-                    // Robot left the endgame zone, remove any endgame points
+                    // Robot left the endgame zone or was never in it, remove any endgame points
+                    if (wasInEndgameZone)
+                    {
+                        wasInEndgameZone = false;
+                        Debug.Log("Robot left endgame zone!");
+                    }
+
                     if (parkScored)
                     {
                         SubtractBlueScore(2);
@@ -511,14 +526,6 @@ public class BlueScoreUpdater : MonoBehaviour
                 }
 
                 var coralsLeftL2 = new List<GameObject>();
-                foreach (var coral in coralsScoredInL2Zones)
-                {
-                    if (!coralsCurrentlyInL2PegZones.Contains(coral))
-                    {
-                        SubtractBlueScore(InAutonomous() ? 4 : 3);
-                        coralsLeftL2.Add(coral);
-                    }
-                }
                 foreach (var coral in coralsLeftL2)
                 {
                     coralsScoredInL2Zones.Remove(coral);
